@@ -1,0 +1,459 @@
+/**
+ * tools.css — shared styles for the calculator/tool pages: actions bar,
+ * grade reference table, "how it works" collapsible, formula typography,
+ * exam schedule grid, course picker.
+ */
+
+/* ---- Actions row ---- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.actions .btn--primary {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* ---- Formula typography (no MathJax — type does the work) ---- */
+
+.formula {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  margin: var(--space-2) 0;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.formula__frac {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.formula__num {
+  padding: 0 var(--space-2) var(--space-1);
+  border-bottom: 1.5px solid currentColor;
+  white-space: nowrap;
+}
+
+.formula__den {
+  padding: var(--space-1) var(--space-2) 0;
+  white-space: nowrap;
+}
+
+.formula__result {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+/* ---- Steps & examples ---- */
+
+.steps {
+  list-style: none;
+  counter-reset: step;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-2);
+}
+
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2.4rem; /* hanging indent for the (0n) marker */
+}
+
+.steps li::before {
+  content: '(0' counter(step) ')';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--accent-text);
+}
+
+.worked-example {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-2);
+  overflow-x: auto;
+}
+
+.worked-example strong {
+  color: var(--text);
+}
+
+/* ---- "How it works" collapsible ---- */
+
+.howto {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  overflow: hidden;
+}
+
+.howto summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-md);
+  min-height: 44px;
+  transition: background var(--dur) var(--ease);
+}
+
+.howto summary::-webkit-details-marker {
+  display: none;
+}
+
+.howto summary:hover {
+  background: var(--surface);
+}
+
+.howto summary .icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  color: var(--muted);
+  transition: transform var(--dur) var(--ease);
+}
+
+.howto[open] summary .icon {
+  transform: rotate(180deg);
+}
+
+.howto__body {
+  padding: 0 var(--space-5) var(--space-5);
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: var(--space-5);
+  padding-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--text-2);
+}
+
+.howto__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--space-5);
+}
+
+.howto__cols > * {
+  min-width: 0;
+}
+
+@media (max-width: 479px) {
+  /* Long fraction lines wrap instead of forcing the panel wide. */
+  .formula__num,
+  .formula__den {
+    white-space: normal;
+  }
+}
+
+.howto h3 {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-md);
+}
+
+/* ---- Grade reference table ---- */
+
+.grade-table-wrap {
+  margin-top: var(--space-5);
+}
+
+.grade-table-wrap .table {
+  max-width: 520px;
+}
+
+.grade-table-wrap .table th:last-child,
+.grade-table-wrap .table td:last-child {
+  text-align: right;
+}
+
+.grade-table-wrap .grade-letter {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+/* ---- Exam schedule grid ---- */
+
+.schedule {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  min-width: 640px;
+}
+
+.schedule th {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-strong);
+  text-align: left;
+}
+
+.schedule th small {
+  display: block;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--faint);
+  margin-top: 1px;
+}
+
+.schedule td {
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  vertical-align: top;
+  min-width: 150px;
+  height: 58px;
+  position: relative; /* containing block for visually-hidden placeholders */
+}
+
+.schedule td:first-child,
+.schedule th:first-child {
+  width: 92px;
+  min-width: 92px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  background: var(--surface);
+  white-space: nowrap;
+}
+
+.schedule td.is-critical {
+  background: var(--danger-soft);
+  border-color: var(--danger-border);
+}
+
+.schedule td.is-pressure {
+  background: var(--warn-soft);
+}
+
+/* Exam pill inside a schedule cell. */
+.exam-pill {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  margin: 2px 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.35;
+}
+
+.exam-pill .icon {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  margin-top: 2px;
+  stroke: currentColor;
+}
+
+.exam-pill strong {
+  font-weight: 600;
+}
+
+.exam-pill small {
+  color: var(--muted);
+  display: block;
+}
+
+.exam-pill--critical {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.exam-pill--pressure {
+  border-color: var(--warn-accent);
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+/* ---- Course picker (searchable checkbox list) ---- */
+
+.picker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+.picker__search {
+  position: relative;
+}
+
+.picker__search .icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  color: var(--faint);
+  pointer-events: none;
+}
+
+.picker__search .input {
+  padding-left: 36px;
+}
+
+.picker__list {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  max-height: 264px;
+  overflow-y: auto;
+  background: var(--card);
+  min-width: 0; /* fieldsets ignore the automatic minimum — set it explicitly */
+}
+
+.picker__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  min-height: 44px;
+  transition: background var(--dur) var(--ease);
+}
+
+.picker__option:last-child {
+  border-bottom: none;
+}
+
+.picker__option:hover {
+  background: var(--surface);
+}
+
+.picker__option input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  flex: none;
+  cursor: pointer;
+}
+
+.picker__option-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  flex: none;
+}
+
+.picker__option-title {
+  font-size: var(--text-xs);
+  color: var(--muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker__option-section {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--faint);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1px 6px;
+  flex: none;
+}
+
+.picker__none {
+  padding: var(--space-4);
+  text-align: center;
+  color: var(--faint);
+  font-size: var(--text-xs);
+}
+
+/* Selected course chips. */
+.selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---- State blocks (loading / error) ---- */
+
+.state-block {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.state-block .icon {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+  color: var(--faint);
+}
+
+/* ---- Status note (assumption footnotes, disclaimers) ---- */
+
+.note {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  font-size: var(--text-xs);
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.note .icon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 2px;
+  stroke: currentColor;
+  color: var(--accent-text);
+}
+
+.note--warn {
+  background: var(--warn-soft);
+  border-color: var(--warn-border);
+  color: var(--warn);
+}
+
+.note--warn .icon {
+  color: var(--warn-accent);
+}

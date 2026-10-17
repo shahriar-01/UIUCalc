@@ -1,0 +1,175 @@
+/**
+ * tokens.css — design tokens for UIU Calculator.
+ * Orange / black / white / neutral-stone identity. Every color, font,
+ * space, radius, shadow and duration used anywhere else is defined here.
+ * Light theme lives on :root; dark overrides on [data-theme="dark"].
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Brand accent (confident orange) -------------------------------- */
+  --orange-300: #ffb37a;
+  --orange-400: #fb8c4a;
+  --orange-500: #f26b1d;
+  --orange-600: #d9560f;
+  --orange-700: #b4460b;
+
+  /* ---- Theme surfaces (light) ------------------------------------------ */
+  --bg: #fafaf8;             /* off-white page background */
+  --surface: #f3f2ef;        /* subtle inset surfaces (well rows, rails)  */
+  --card: #ffffff;           /* pure white cards                          */
+  --card-2: #fcfcfb;
+  --border: #e7e5e4;         /* stone-200 style hairlines                 */
+  --border-strong: #d6d3d1;
+
+  /* ---- Theme text (light) ---------------------------------------------- */
+  --text: #1c1917;
+  --text-2: #44403c;
+  --muted: #57534e;
+  --faint: #a8a29e;          /* disabled / decorative only                */
+
+  /* ---- Accent mapping (light) ------------------------------------------ */
+  --accent: #f26b1d;         /* primary actions, active states            */
+  --accent-hover: #d9560f;
+  --accent-down: #b4460b;
+  --accent-contrast: #1c1917;   /* text on orange buttons (5.5:1 AA)      */
+  --accent-text: #ff4d00;    /* small orange text on light bg (5.1:1 AA)  */
+  --accent-soft: #fbe9dc;    /* tinted backgrounds / active nav           */
+  --accent-soft-border: #f5cfae;
+  --focus-ring: #d9560f;
+
+  /* ---- Status (light) --------------------------------------------------- */
+  --ok: #15803d;
+  --ok-soft: #e5f4ea;
+  --ok-border: #bbe4c8;
+  --warn: #92400e;
+  --warn-accent: #b45309;
+  --warn-soft: #fdf3dc;
+  --warn-border: #f0dba4;
+  --danger: #b3261e;
+  --danger-accent: #c92a2a;
+  --danger-soft: #fcebea;
+  --danger-border: #f2c5c2;
+
+  /* ---- Hero (permanently dark, both themes) ----------------------------- */
+  --hero-bg: #0b0b0c;
+  --hero-bg-2: #151517;
+  --hero-border: rgba(255, 255, 255, 0.09);
+  --hero-text: #f5f5f4;
+  --hero-muted: #a8a29e;
+
+  /* ---- Typography -------------------------------------------------------- */
+  --font-display: 'Space Grotesk', 'Avenir Next', 'Trebuchet MS', sans-serif;
+  --font-body: 'IBM Plex Sans', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.4375rem;
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.2vw, 1.875rem);
+  --text-3xl: clamp(1.75rem, 1.25rem + 2.2vw, 2.5rem);
+  --text-4xl: clamp(2.75rem, 1.2rem + 5vw, 4.25rem);
+
+  --tracking-display: -0.025em;
+  --tracking-caps: 0.14em;
+
+  /* ---- Spacing scale (4px base) ------------------------------------------ */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --space-8: 2.5rem;
+  --space-9: 3rem;
+  --space-10: 4rem;
+
+  /* ---- Radii -------------------------------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+
+  /* ---- Elevation (restrained; flat design first) -------------------------- */
+  --shadow-1: 0 1px 2px rgba(28, 25, 23, 0.05);
+  --shadow-2: 0 6px 24px -8px rgba(28, 25, 23, 0.14);
+  --shadow-pop: 0 12px 40px -12px rgba(11, 11, 12, 0.28);
+
+  /* ---- Motion (silky smooth, physics-based curves) ----------------------- */
+  --dur-fast: 160ms;
+  --dur: 250ms;
+  --dur-slow: 380ms;
+  --dur-deliberate: 520ms;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring: cubic-bezier(0.34, 1.25, 0.64, 1);
+
+  /* ---- Structure ------------------------------------------------------------ */
+  --sidebar-w: 264px;
+  --sidebar-w-collapsed: 76px;
+  --topbar-h: 60px;
+  --content-max: 1280px;
+  --z-sidebar: 40;
+  --z-topbar: 30;
+  --z-backdrop: 50;
+  --z-drawer: 60;
+  --z-toast: 80;
+  --z-dialog: 100;
+
+  --grid-line: rgba(28, 25, 23, 0.05);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0b0b0c;
+  --surface: #121214;
+  --card: #151517;
+  --card-2: #1a1a1d;
+  --border: #26262a;
+  --border-strong: #3a3a41;
+
+  --text: #f5f5f4;
+  --text-2: #d6d3d1;
+  --muted: #a8a29e;
+  --faint: #6e6a66;
+
+  --accent: #f26b1d;
+  --accent-hover: #fb8c4a;
+  --accent-down: #d9560f;
+  --accent-contrast: #140c05;
+  --accent-text: #ff4e02d6;
+  --accent-soft: rgba(242, 107, 29, 0.14);
+  --accent-soft-border: rgba(242, 107, 29, 0.38);
+  --focus-ring: #fb8c4a;
+
+  --ok: #4ade80;
+  --ok-soft: rgba(74, 222, 128, 0.12);
+  --ok-border: rgba(74, 222, 128, 0.35);
+  --warn: #fbbf24;
+  --warn-accent: #fbbf24;
+  --warn-soft: rgba(251, 191, 36, 0.1);
+  --warn-border: rgba(251, 191, 36, 0.32);
+  --danger: #f87171;
+  --danger-accent: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.12);
+  --danger-border: rgba(248, 113, 113, 0.35);
+
+  --hero-bg: #0b0b0c;
+  --hero-bg-2: #101012;
+  --hero-border: rgba(255, 255, 255, 0.09);
+  --hero-text: #f5f5f4;
+  --hero-muted: #a8a29e;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 6px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-pop: 0 12px 40px -12px rgba(0, 0, 0, 0.7);
+
+  --grid-line: rgba(255, 255, 255, 0.045);
+}
