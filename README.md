@@ -5,10 +5,10 @@
   </picture>
 </p>
 
-<h1 align="center">UIUCalc</h1>
+<!-- <h1 align="center">UIUCalc</h1> -->
 
 <p align="center">
-  A fast, minimal academic toolkit for UIU students: CGPA, tuition fees, target planning and exam clash checking in one place.
+  UIUCalc --- A fast, minimal academic toolkit for UIU students: CGPA, tuition fees, target planning and exam clash checking in one place.
 </p>
 
 <p align="center">
