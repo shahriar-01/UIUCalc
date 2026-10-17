@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tuition Fee Calculator — UIU Calculator</title>
+  <meta name="description" content="Estimate your UIU trimester fee: per-credit tuition, waivers, scholarships, FYDP and retake rules, late fines and the 40-30-30 installment plan.">
+  <meta property="og:title" content="Tuition Fee Calculator — UIU Calculator">
+  <meta property="og:description" content="Gross fees, itemized waivers and the 40-30-30 installment plan, calculated with UIU's rules.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uiu-calculator.vercel.app/calculator/tuition-fee/">
+  <meta property="og:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tuition Fee Calculator — UIU Calculator">
+  <meta name="twitter:description" content="Gross fees, itemized waivers and the 40-30-30 installment plan, calculated with UIU's rules.">
+  <meta name="twitter:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/tools.css">
+  <script>
+    // Theme boot — applies the stored (or system) theme before first paint.
+    (function () {
+      var theme = null;
+      try {
+        var raw = localStorage.getItem('uiucalc:theme');
+        theme = raw ? JSON.parse(raw) : null;
+      } catch (e) { /* storage unavailable */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <script type="module" src="/assets/js/pages/tuition-fee.js"></script>
+</head>
+<body data-shell="app">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="header-root"></div>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="page-head">
+          <p class="page-head__eyebrow">Calculator / 02</p>
+          <h1 class="page-head__title">Tuition Fee Calculator</h1>
+          <p class="page-head__lede">Gross fee, waivers, scholarship rules and the three installments — itemized, with UIU's policies built in.</p>
+        </div>
+
+        <div class="tool-grid">
+          <!-- ============ Inputs column ============ -->
+          <div class="section-stack">
+            <section class="panel" aria-labelledby="credits-title">
+              <div class="panel__head"><h2 class="panel__title" id="credits-title">Credit hours information</h2></div>
+              <div class="form-grid">
+                <div class="field field--full">
+                  <label class="field__label" for="fee-new-credits">New credit hours</label>
+                  <input class="input num" id="fee-new-credits" type="number" inputmode="decimal" min="0" max="60" step="0.5" placeholder="e.g. 12">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="fee-retake1">Retake credits (1st time)</label>
+                  <input class="input num" id="fee-retake1" type="number" inputmode="decimal" min="0" max="60" step="0.5" placeholder="0">
+                  <p class="field__hint">A 50% discount applies (configurable).</p>
+                  <p class="field__error" data-error hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="fee-retake2">Retake credits (2nd time or more)</label>
+                  <input class="input num" id="fee-retake2" type="number" inputmode="decimal" min="0" max="60" step="0.5" placeholder="0">
+                  <p class="field__hint">Full tuition fee applies.</p>
+                  <p class="field__error" data-error hidden></p>
+                </div>
+                <div class="field field--full">
+                  <label class="toggle" for="fydp-toggle" style="margin-top:var(--space-2)">
+                    <input type="checkbox" id="fydp-toggle">
+                    <span class="toggle__track" aria-hidden="true"></span>
+                    <span class="toggle__text">
+                      <span class="toggle__label">Include FYDP credits</span>
+                      <span class="toggle__hint">FYDP / thesis / project credits get no waiver or scholarship.</span>
+                    </span>
+                  </label>
+                  <input class="input num" id="fydp-credits" type="number" inputmode="decimal" min="0" max="30" step="0.5" placeholder="FYDP credits, e.g. 2" aria-label="FYDP credits" style="margin-top:var(--space-2)">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel" aria-labelledby="feeinfo-title">
+              <div class="panel__head"><h2 class="panel__title" id="feeinfo-title">Fee information</h2></div>
+              <div class="form-grid">
+                <div class="field">
+                  <label class="field__label" for="per-credit-fee">Per credit fee (BDT)</label>
+                  <input class="input num" id="per-credit-fee" type="number" inputmode="numeric" min="0" max="100000" step="100">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="trimester-fee">Trimester fee (BDT)</label>
+                  <input class="input num" id="trimester-fee" type="number" inputmode="numeric" min="0" max="100000" step="100">
+                  <p class="field__hint">Fixed charge — not affected by waiver or scholarship.</p>
+                  <p class="field__error" data-error hidden></p>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel" aria-labelledby="discounts-title">
+              <div class="panel__head"><h2 class="panel__title" id="discounts-title">Regular discounts</h2></div>
+              <div class="form-grid">
+                <div class="field">
+                  <label class="field__label" for="waiver-select">Waiver</label>
+                  <select class="select" id="waiver-select">
+                    <option value="0">No waiver</option>
+                    <option value="0.25">25% waiver</option>
+                    <option value="0.5">50% waiver</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="scholarship-select">Scholarship</label>
+                  <select class="select" id="scholarship-select">
+                    <option value="0">No scholarship</option>
+                    <option value="0.25">25% scholarship</option>
+                    <option value="0.5">50% scholarship</option>
+                    <option value="1">100% scholarship</option>
+                  </select>
+                </div>
+              </div>
+              <p class="field__hint" style="margin-top:var(--space-3)">
+                A scholarship covers a maximum of 13 credits — additional credits follow your waiver rate. The higher of waiver and
+                scholarship applies. Have both? Select both for an accurate result.
+              </p>
+              <label class="toggle" for="apply-first-toggle" style="margin-top:var(--space-4)">
+                <input type="checkbox" id="apply-first-toggle">
+                <span class="toggle__track" aria-hidden="true"></span>
+                <span class="toggle__text">
+                  <span class="toggle__label">Apply waiver/scholarship in first installment</span>
+                  <span class="toggle__hint">Usually the waiver is not applied on the 1st installment — leave off unless yours differs.</span>
+                </span>
+              </label>
+            </section>
+
+            <section class="panel" aria-labelledby="special-title">
+              <div class="panel__head"><h2 class="panel__title" id="special-title">Special discounts <span class="panel__meta">stackable</span></h2></div>
+              <label class="toggle" for="batch251-toggle">
+                <input type="checkbox" id="batch251-toggle">
+                <span class="toggle__track" aria-hidden="true"></span>
+                <span class="toggle__text">
+                  <span class="toggle__label">Batch 251 or later</span>
+                  <span class="toggle__hint">From batch 251 these waivers are not stackable — only the highest applies.</span>
+                </span>
+              </label>
+              <div class="form-grid" style="margin-top:var(--space-4)">
+                <div class="field">
+                  <label class="field__label" for="sibling-select">Sibling / spouse waiver</label>
+                  <select class="select" id="sibling-select">
+                    <option value="0">Not applicable</option>
+                    <option value="0.2">20% — sibling/spouse</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="ethnic-select">Ethnic groups / tribal waiver</label>
+                  <select class="select" id="ethnic-select">
+                    <option value="0">Not applicable</option>
+                    <option value="0.25">25% — ethnic/tribal</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="disability-select">Physically disabled students waiver</label>
+                  <select class="select" id="disability-select">
+                    <option value="0">Not applicable</option>
+                    <option value="0.25">25% — moderate disability</option>
+                    <option value="0.5">50% — severe disability</option>
+                  </select>
+                </div>
+              </div>
+              <p class="field__hint" style="margin-top:var(--space-3)">Special waivers stack with regular discounts and apply to eligible students (never to FYDP, thesis or retake credits).</p>
+            </section>
+
+            <section class="panel" aria-labelledby="extra-title">
+              <div class="panel__head"><h2 class="panel__title" id="extra-title">Additional fees</h2></div>
+              <label class="toggle" for="late-toggle">
+                <input type="checkbox" id="late-toggle">
+                <span class="toggle__track" aria-hidden="true"></span>
+                <span class="toggle__text">
+                  <span class="toggle__label">Late registration</span>
+                  <span class="toggle__hint">Additional fine of ৳500.</span>
+                </span>
+              </label>
+            </section>
+
+            <div class="actions" style="margin-top:0">
+              <button class="btn btn--secondary" id="fee-reset" type="button">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#reset"/></svg>
+                Reset
+              </button>
+              <button class="btn btn--primary" id="fee-calc" type="button">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#receipt"/></svg>
+                Calculate Fee
+              </button>
+            </div>
+          </div>
+
+          <!-- ============ Results column ============ -->
+          <aside class="tool-results" aria-label="Fee result" aria-live="polite">
+            <div class="stat-display">
+              <p class="stat-display__label">Net payable</p>
+              <p class="stat-display__value" id="fee-net" data-value="0">৳0</p>
+              <div class="stat-display__sub"><span>Gross fee <strong class="num" id="fee-gross">—</strong></span></div>
+            </div>
+
+            <div class="panel" id="fee-empty">
+              <div class="empty">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#receipt"/></svg>
+                <p>Your payment breakdown appears here. Set your credit hours and discounts, then press <strong>Calculate Fee</strong>.</p>
+              </div>
+            </div>
+
+            <div class="panel" id="fee-filled" hidden>
+              <div class="panel__head" style="margin-bottom:var(--space-2)">
+                <h3 class="panel__title">Payment breakdown</h3>
+                <button class="btn btn--secondary btn--sm" id="copy-summary" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#copy"/></svg>
+                  Copy summary
+                </button>
+              </div>
+              <dl class="result-rows" id="fee-breakdown"></dl>
+
+              <div class="panel__head" style="margin:var(--space-5) 0 var(--space-2)">
+                <h3 class="panel__title">Deductions</h3>
+              </div>
+              <dl class="result-rows" id="fee-deductions"></dl>
+
+              <div class="panel__head" style="margin:var(--space-5) 0 var(--space-2)">
+                <h3 class="panel__title">Installments <span class="panel__meta">40 – 30 – 30</span></h3>
+              </div>
+              <dl class="result-rows" id="fee-installments"></dl>
+            </div>
+
+            <div id="batch251-notice" class="note note--info" style="margin-top:var(--space-4); display: flex; align-items: flex-start; gap: var(--space-3);" hidden>
+              <svg class="icon" aria-hidden="true" style="flex-shrink:0; margin-top:2px;"><use href="/assets/icons/sprite.svg#info"/></svg>
+              <div id="batch251-notice-text"></div>
+            </div>
+
+            <p class="note note--warn">
+              <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#alert-triangle"/></svg>
+              <span><strong>Estimates only.</strong> Confirm final amounts with the university accounts office.</span>
+            </p>
+          </aside>
+        </div>
+      </main>
+
+      <div id="footer-root"></div>
+    </div>
+  </div>
+
+  <template id="help-content">
+    <h3>1. Enter your credit hours</h3>
+    <p>New credits, first-time retakes (a 50% discount applies), 2nd-or-later retakes (full tuition), and optionally FYDP/thesis credits — those are never discounted.</p>
+    <h3>2. Check the fee rates</h3>
+    <p>The per-credit fee and the fixed ৳6,500 trimester fee are editable — match them to your program's current rates.</p>
+    <h3>3. Apply your discounts</h3>
+    <p>Regular waiver and scholarship: the higher one applies, and a scholarship covers at most 13 credits. Special waivers (sibling, ethnic, disability) stack on top — unless you're batch 251 or later, where only the highest counts.</p>
+    <h3>4. Calculate</h3>
+    <p>You'll get the gross fee, every deduction itemized, the net payable and the standard 40-30-30 installments. Waiver adjustments normally land in the 2nd and 3rd installments. Use <strong>Copy summary</strong> to share the numbers.</p>
+  </template>
+</body>
+</html>

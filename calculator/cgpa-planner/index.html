@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Target CGPA Planner — UIU Calculator</title>
+  <meta name="description" content="Find the GPA you need next trimester, over several terms, or until graduation to hit your target CGPA — plus what-if scenarios and a suggested grade mix.">
+  <meta property="og:title" content="Target CGPA Planner — UIU Calculator">
+  <meta property="og:description" content="Work out the GPA you need to reach your target CGPA — next term, across terms, or by graduation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uiu-calculator.vercel.app/calculator/cgpa-planner/">
+  <meta property="og:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Target CGPA Planner — UIU Calculator">
+  <meta name="twitter:description" content="Work out the GPA you need to reach your target CGPA — next term, across terms, or by graduation.">
+  <meta name="twitter:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/tools.css">
+  <script>
+    // Theme boot — applies the stored (or system) theme before first paint.
+    (function () {
+      var theme = null;
+      try {
+        var raw = localStorage.getItem('uiucalc:theme');
+        theme = raw ? JSON.parse(raw) : null;
+      } catch (e) { /* storage unavailable */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <script type="module" src="/assets/js/pages/cgpa-planner.js"></script>
+</head>
+<body data-shell="app">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="header-root"></div>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="page-head">
+          <p class="page-head__eyebrow">Calculator / 03</p>
+          <h1 class="page-head__title">Target CGPA Planner</h1>
+          <p class="page-head__lede">Set a target and find out the GPA it takes to get there — next trimester, over several, or by graduation.</p>
+        </div>
+
+        <div class="tool-grid">
+          <!-- ============ Inputs column ============ -->
+          <div class="section-stack">
+            <section class="panel" aria-labelledby="pl-status-title">
+              <div class="panel__head"><h2 class="panel__title" id="pl-status-title">Academic status &amp; target</h2></div>
+              <div class="form-grid form-grid--3">
+                <div class="field">
+                  <label class="field__label" for="pl-completed">Completed credits</label>
+                  <input class="input num" id="pl-completed" type="number" inputmode="decimal" min="0" max="250" step="0.5" placeholder="e.g. 60">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="pl-current">Current CGPA</label>
+                  <input class="input num" id="pl-current" type="number" inputmode="decimal" min="0" max="4" step="0.01" placeholder="0.00 – 4.00">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="pl-target">Target CGPA</label>
+                  <input class="input num" id="pl-target" type="number" inputmode="decimal" min="0" max="4" step="0.01" placeholder="0.00 – 4.00">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+              </div>
+              <p class="field__hint" style="margin-top:var(--space-2)">In your first trimester? Put 0 for completed credits and current CGPA.</p>
+            </section>
+
+            <section class="panel" aria-label="Planning scenario">
+              <div class="tabs" id="planner-tabs" role="tablist" aria-label="Planning scenario">
+                <button class="tab" role="tab" id="pl-tab-next" aria-controls="pl-panel-next" aria-selected="true" type="button">Next Trimester</button>
+                <button class="tab" role="tab" id="pl-tab-multi" aria-controls="pl-panel-multi" aria-selected="false" tabindex="-1" type="button">Multiple Trimesters</button>
+                <button class="tab" role="tab" id="pl-tab-grad" aria-controls="pl-panel-grad" aria-selected="false" tabindex="-1" type="button">Until Graduation</button>
+                <button class="tab" role="tab" id="pl-tab-whatif" aria-controls="pl-panel-whatif" aria-selected="false" tabindex="-1" type="button">What-If Analysis</button>
+              </div>
+
+              <div role="tabpanel" id="pl-panel-next" aria-labelledby="pl-tab-next" style="padding-top:var(--space-4)">
+                <div class="field">
+                  <label class="field__label" for="pl-next-credits">Credits next trimester</label>
+                  <input class="input num" id="pl-next-credits" type="number" inputmode="decimal" min="0.5" max="60" step="0.5" placeholder="e.g. 15">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+              </div>
+
+              <div role="tabpanel" id="pl-panel-multi" aria-labelledby="pl-tab-multi" hidden style="padding-top:var(--space-4)">
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="field__label" for="pl-terms">Number of trimesters</label>
+                    <input class="input num" id="pl-terms" type="number" inputmode="numeric" min="1" max="20" step="1" placeholder="e.g. 4">
+                    <p class="field__error" data-error hidden></p>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="pl-per-term">Credits per trimester</label>
+                    <input class="input num" id="pl-per-term" type="number" inputmode="decimal" min="0.5" max="60" step="0.5" placeholder="e.g. 14">
+                    <p class="field__error" data-error hidden></p>
+                  </div>
+                </div>
+              </div>
+
+              <div role="tabpanel" id="pl-panel-grad" aria-labelledby="pl-tab-grad" hidden style="padding-top:var(--space-4)">
+                <div class="field">
+                  <label class="field__label" for="pl-degree-total">Total degree credits</label>
+                  <input class="input num" id="pl-degree-total" type="number" inputmode="decimal" min="1" max="400" step="0.5" placeholder="e.g. 150">
+                  <p class="field__hint">The planner targets your remaining credits: degree total − completed.</p>
+                  <p class="field__error" data-error hidden></p>
+                </div>
+              </div>
+
+              <div role="tabpanel" id="pl-panel-whatif" aria-labelledby="pl-tab-whatif" hidden style="padding-top:var(--space-4)">
+                <div class="form-grid">
+                  <div class="field">
+                    <label class="field__label" for="pl-whatif-credits">Scenario credits</label>
+                    <input class="input num" id="pl-whatif-credits" type="number" inputmode="decimal" min="0.5" max="60" step="0.5" placeholder="e.g. 15">
+                    <p class="field__error" data-error hidden></p>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="pl-whatif-gpa">Expected GPA</label>
+                    <input class="input num" id="pl-whatif-gpa" type="number" inputmode="decimal" min="0" max="4" step="0.01" placeholder="0.00 – 4.00">
+                    <p class="field__hint">See how different GPAs affect your CGPA.</p>
+                    <p class="field__error" data-error hidden></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn--secondary" id="planner-reset" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#reset"/></svg>
+                  Reset
+                </button>
+                <button class="btn btn--primary" id="planner-calc" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#target"/></svg>
+                  Calculate
+                </button>
+              </div>
+            </section>
+
+            <details class="howto grade-table-wrap" id="grading-scale-details">
+              <summary class="howto__summary">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#table"/></svg>
+                <span>UIU grading system — letter grades, points &amp; marks</span>
+                <svg class="icon howto__chevron" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"/></svg>
+              </summary>
+              <div class="howto__body" style="padding-top:var(--space-3)">
+                <div id="grade-table"></div>
+              </div>
+            </details>
+          </div>
+
+          <!-- ============ Results column ============ -->
+          <aside class="tool-results" aria-label="Planner result" aria-live="polite">
+            <div class="stat-display">
+              <p class="stat-display__label" id="planner-headline">Required GPA</p>
+              <p class="stat-display__value" id="planner-value" data-value="0">0.00</p>
+              <div class="stat-display__sub">
+                <span class="chip chip--flat" id="planner-delta" hidden><span></span></span>
+              </div>
+            </div>
+
+            <div class="panel" id="planner-empty">
+              <div class="empty">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#target"/></svg>
+                <p>Set your status and a target, then press <strong>Calculate</strong> to see the required GPA, a gauge and a suggested grade mix.</p>
+              </div>
+            </div>
+
+            <div class="panel" id="planner-filled" hidden>
+              <div class="gauge" id="gauge-wrap">
+                <div class="gauge__track">
+                  <div class="gauge__fill" id="gauge-fill"></div>
+                  <div class="gauge__marker" id="gauge-current-marker" title="Current CGPA"></div>
+                  <div class="gauge__marker gauge__marker--target" id="gauge-target-marker" title="Target CGPA"></div>
+                </div>
+                <div class="gauge__scale" aria-hidden="true"><span>0.00</span><span>1.00</span><span>2.00</span><span>3.00</span><span>4.00</span></div>
+              </div>
+              <p class="result-row" style="display:block;padding:var(--space-3) 0" id="planner-mix"></p>
+              <p class="field__hint" id="planner-explain"></p>
+              <div class="alert-card alert-card--critical" id="planner-unreachable-note" hidden style="margin-top:var(--space-4)">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#alert-octagon"/></svg>
+                <div>
+                  <p class="alert-card__title">Target not reachable in this plan</p>
+                  <p class="alert-card__body">Add more planned credits, stretch the timeline, or aim for a slightly lower target CGPA.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trimester-by-Trimester Projection Card -->
+            <section class="panel" id="planner-projection-card" hidden>
+              <div class="panel__head" style="margin-bottom:var(--space-2)">
+                <h3 class="panel__title">Trimester-by-Trimester Projection</h3>
+              </div>
+              <div id="planner-projection-graph" style="margin-bottom:var(--space-3)"></div>
+              <div class="table-wrap" style="max-height:240px; overflow-y:auto">
+                <table class="table" id="planner-projection-table" style="font-size:var(--text-xs)">
+                  <thead>
+                    <tr>
+                      <th>Trimester</th>
+                      <th class="num">Credits</th>
+                      <th class="num">Term GPA</th>
+                      <th class="num">Total Cr</th>
+                      <th class="num">Projected CGPA</th>
+                    </tr>
+                  </thead>
+                  <tbody id="planner-projection-tbody"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Alternative GPA Scenarios Card -->
+            <section class="panel" id="planner-scenarios-card" hidden>
+              <div class="panel__head" style="margin-bottom:var(--space-2)">
+                <h3 class="panel__title">Alternative GPA Scenarios</h3>
+              </div>
+              <div class="table-wrap" style="max-height:240px; overflow-y:auto">
+                <table class="table" id="planner-scenarios-table" style="font-size:var(--text-xs)">
+                  <thead>
+                    <tr>
+                      <th>Grade</th>
+                      <th class="num">GPA</th>
+                      <th class="num">New CGPA</th>
+                      <th class="num">vs Target</th>
+                    </tr>
+                  </thead>
+                  <tbody id="planner-scenarios-tbody"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <p class="note">
+              <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#info"/></svg>
+              <span>Required GPA = (Target × (Completed + Planned) − Current × Completed) ÷ Planned. Above 4.00 means the plan can't reach the target; at or below 0 means it's already secured.</span>
+            </p>
+          </aside>
+        </div>
+      </main>
+
+      <div id="footer-root"></div>
+    </div>
+  </div>
+
+  <template id="help-content">
+    <h3>1. Set your status and target</h3>
+    <p>Completed credits, current CGPA, and the CGPA you're aiming for (both 0–4.00).</p>
+    <h3>2. Pick a scenario</h3>
+    <p><strong>Next Trimester</strong> for one term, <strong>Multiple Trimesters</strong> for a stretch, <strong>Until Graduation</strong> for the rest of your degree, or <strong>What-If</strong> to preview the CGPA an expected GPA would produce.</p>
+    <h3>3. Read the result</h3>
+    <p>You'll get the required GPA, a gauge showing where it sits against the 4.00 scale, and the closest realistic grade mix (for example "mostly A- with some A"). If the target needs more than 4.00, the planner says so and suggests a bigger plan; if it's already safe, it tells you that too.</p>
+  </template>
+</body>
+</html>

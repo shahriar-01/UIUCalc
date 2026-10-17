@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CGPA Calculator — UIU Calculator</title>
+  <meta name="description" content="Calculate your updated UIU CGPA from new and retake courses using the official A–F grade scale. Worked formulas, animated results, saved inputs.">
+  <meta property="og:title" content="CGPA Calculator — UIU Calculator">
+  <meta property="og:description" content="Blend new and retake courses into your updated CGPA, with the full UIU grade scale on hand.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uiu-calculator.vercel.app/calculator/cgpa/">
+  <meta property="og:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CGPA Calculator — UIU Calculator">
+  <meta name="twitter:description" content="Blend new and retake courses into your updated CGPA, with the full UIU grade scale on hand.">
+  <meta name="twitter:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/tools.css">
+  <script>
+    // Theme boot — applies the stored (or system) theme before first paint.
+    (function () {
+      var theme = null;
+      try {
+        var raw = localStorage.getItem('uiucalc:theme');
+        theme = raw ? JSON.parse(raw) : null;
+      } catch (e) { /* storage unavailable */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <script type="module" src="/assets/js/pages/cgpa.js"></script>
+</head>
+<body data-shell="app">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="header-root"></div>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="page-head">
+          <p class="page-head__eyebrow">Calculator / 01</p>
+          <h1 class="page-head__title">CGPA Calculator</h1>
+          <p class="page-head__lede">Add this trimester's new and retake courses to see exactly where your CGPA lands.</p>
+        </div>
+
+        <div class="tool-grid">
+          <!-- ============ Inputs column ============ -->
+          <div class="section-stack">
+            <section class="panel" aria-labelledby="status-title">
+              <div class="panel__head">
+                <h2 class="panel__title" id="status-title">Current academic status</h2>
+              </div>
+              <div class="form-grid">
+                <div class="field">
+                  <label class="field__label" for="completed-credits">Completed credits</label>
+                  <input class="input num" id="completed-credits" type="number" inputmode="decimal" min="0" max="250" step="0.5" placeholder="e.g. 30">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="current-cgpa">Current CGPA</label>
+                  <input class="input num" id="current-cgpa" type="number" inputmode="decimal" min="0" max="4" step="0.01" placeholder="0.00 – 4.00">
+                  <p class="field__error" data-error hidden></p>
+                </div>
+              </div>
+              <p class="field__hint" style="margin-top:var(--space-2)">In your first trimester? Enter 0 for both fields.</p>
+            </section>
+
+            <section class="panel" aria-label="Courses">
+              <div class="tabs" id="cgpa-tabs" role="tablist" aria-label="Course type">
+                <button class="tab" role="tab" id="tab-new" aria-controls="panel-new" aria-selected="true" type="button">New Courses</button>
+                <button class="tab" role="tab" id="tab-retake" aria-controls="panel-retake" aria-selected="false" tabindex="-1" type="button">Retake Courses</button>
+              </div>
+
+              <div role="tabpanel" id="panel-new" aria-labelledby="tab-new" style="padding-top:var(--space-4)">
+                <div class="form-grid form-grid--3">
+                  <div class="field">
+                    <label class="field__label" for="new-credit">Credit hours</label>
+                    <select class="select" id="new-credit"></select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="new-grade">Expected grade</label>
+                    <select class="select" id="new-grade"></select>
+                  </div>
+                  <div class="field field--action">
+                    <button class="btn btn--primary btn--block" id="add-course" type="button">
+                      <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#plus"/></svg>
+                      Add Course
+                    </button>
+                  </div>
+                </div>
+
+                <div class="panel__head" style="margin-top:var(--space-5);margin-bottom:var(--space-2)">
+                  <h3 class="panel__title">Added new courses</h3>
+                  <span class="panel__meta num" id="new-count">0 courses</span>
+                </div>
+                <div class="table-scroll">
+                  <table class="table table--stack" aria-label="Added new courses">
+                    <thead>
+                      <tr><th scope="col">Credit</th><th scope="col">Grade</th><th scope="col">Points</th><th scope="col"><span class="visually-hidden">Remove</span></th></tr>
+                    </thead>
+                    <tbody id="new-courses-body"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div role="tabpanel" id="panel-retake" aria-labelledby="tab-retake" hidden style="padding-top:var(--space-4)">
+                <div class="form-grid form-grid--3">
+                  <div class="field">
+                    <label class="field__label" for="retake-credit">Credit hours</label>
+                    <select class="select" id="retake-credit"></select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="retake-prev">Previous grade</label>
+                    <select class="select" id="retake-prev"></select>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="retake-new">Expected grade</label>
+                    <select class="select" id="retake-new"></select>
+                  </div>
+                </div>
+                <div style="margin-top:var(--space-4)">
+                  <button class="btn btn--primary" id="add-retake" type="button">
+                    <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#plus"/></svg>
+                    Add Retake Course
+                  </button>
+                </div>
+
+                <div class="panel__head" style="margin-top:var(--space-5);margin-bottom:var(--space-2)">
+                  <h3 class="panel__title">Added retake courses</h3>
+                  <span class="panel__meta num" id="retake-count">0 courses</span>
+                </div>
+                <div class="table-scroll">
+                  <table class="table table--stack" aria-label="Added retake courses">
+                    <thead>
+                      <tr><th scope="col">Credit</th><th scope="col">Previous</th><th scope="col">New</th><th scope="col">Improvement</th><th scope="col"><span class="visually-hidden">Remove</span></th></tr>
+                    </thead>
+                    <tbody id="retake-courses-body"></tbody>
+                  </table>
+                </div>
+                <p class="field__hint" style="margin-top:var(--space-3)">
+                  Retakes replace the previous grade point on credits you already completed — those credit hours are not counted twice.
+                </p>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn--secondary" id="cgpa-reset" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#reset"/></svg>
+                  Reset
+                </button>
+                <button class="btn btn--primary" id="cgpa-calc" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#sigma"/></svg>
+                  Calculate CGPA
+                </button>
+              </div>
+            </section>
+
+            <details class="howto">
+              <summary id="howto-title">
+                How it works — GPA &amp; CGPA formulas
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"/></svg>
+              </summary>
+              <div class="howto__body">
+                <div class="howto__cols">
+                  <div>
+                    <h3>GPA — one trimester</h3>
+                    <div class="formula" role="img" aria-label="GPA equals the sum of grade point times credit hours, divided by the sum of credit hours">
+                      <span class="formula__frac">
+                        <span class="formula__num">Σ (Grade Point × Credit Hours)</span>
+                        <span class="formula__den">Σ Credit Hours</span>
+                      </span>
+                    </div>
+                    <ol class="steps">
+                      <li>Convert each course's percentage or letter grade to its grade point.</li>
+                      <li>Multiply the grade point by the course's credit hours.</li>
+                      <li>Add up all the results.</li>
+                      <li>Divide the total by the sum of all credit hours.</li>
+                    </ol>
+                    
+                  </div>
+                  <div>
+                    <h3>CGPA — across trimesters</h3>
+                    <div class="formula" role="img" aria-label="CGPA equals the sum of each trimester GPA times its credits, divided by total credits">
+                      <span class="formula__frac">
+                        <span class="formula__num">Σ (GPA₁ × Credits₁ + GPA₂ × Credits₂ + …)</span>
+                        <span class="formula__den">Total Credits</span>
+                      </span>
+                    </div>
+                    <ol class="steps">
+                      <li>Calculate each trimester's GPA with the formula on the left.</li>
+                      <li>Multiply each trimester's GPA by that trimester's credit hours.</li>
+                      <li>Add up all the results.</li>
+                      <li>Divide by the sum of all credit hours from all trimesters.</li>
+                    </ol>
+              
+                  </div>
+                </div>
+                <p class="field__hint">Displayed values round to 2 decimals; the underlying math never rounds intermediate steps.</p>
+              </div>
+            </details>
+
+            <details class="howto grade-table-wrap" style="margin-top: 0; padding-top: 1px;" aria-labelledby="grade-table-title">
+              <summary id="grade-table-title">
+                UIU Grading System
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#chevron-down"/></svg>
+              </summary>
+              <div class="howto__body" id="grade-table"></div>
+            </details>
+          </div>
+
+          <!-- ============ Results column ============ -->
+          <aside class="tool-results" aria-label="Result" aria-live="polite">
+            <div class="stat-display">
+              <p class="stat-display__label">Updated CGPA</p>
+              <p class="stat-display__value" id="result-cgpa" data-value="0">0.00</p>
+              <div class="stat-display__sub">
+                <span class="chip chip--flat" id="result-delta"><span>Enter your status to begin</span></span>
+              </div>
+            </div>
+
+            <div class="panel" id="result-empty">
+              <div class="empty">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#sigma"/></svg>
+                <p>Your result appears here. Enter your academic status, add courses, then press <strong>Calculate CGPA</strong>.</p>
+              </div>
+            </div>
+
+            <div class="panel" id="result-filled" hidden>
+              <dl class="result-rows">
+                <div class="result-row"><dt>Term GPA</dt><dd id="result-term">—</dd></div>
+                <div class="result-row"><dt>New courses added</dt><dd id="result-new-courses">—</dd></div>
+                <div class="result-row"><dt>Retake courses</dt><dd id="result-retake-courses">—</dd></div>
+                <div class="result-row"><dt>Total credits after update</dt><dd id="result-total">—</dd></div>
+                <!-- <div class="result-row"><dt>Total points</dt><dd id="result-qp">—</dd></div> -->
+                <div class="result-row"><dt>Previous academic standing</dt><dd id="result-prev">—</dd></div>
+              </dl>
+              <p class="note" style="margin-top:var(--space-4)">
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#info"/></svg>
+                <span>Retake courses replace the previous grade point on already-completed credits — the retake's credit hours are not added a second time.</span>
+              </p>
+            </div>
+
+            <p class="visually-hidden" id="result-summary" role="status"></p>
+          </aside>
+        </div>
+      </main>
+
+      <div id="footer-root"></div>
+    </div>
+  </div>
+
+  <dialog class="dialog" id="edit-course-dialog" aria-labelledby="edit-course-title">
+    <div class="dialog__panel">
+      <header class="dialog__head">
+        <h2 class="dialog__title" id="edit-course-title">Edit Course</h2>
+        <button type="button" class="icon-btn" data-edit-close aria-label="Close edit dialog">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"/></svg>
+        </button>
+      </header>
+      <form class="dialog__body" id="edit-course-form" style="display:grid; gap:var(--space-4);">
+        <input type="hidden" id="edit-course-type" value="new">
+        <input type="hidden" id="edit-course-index" value="-1">
+        
+        <div class="field">
+          <label class="field__label" for="edit-course-credit">Credit hours</label>
+          <select class="select num" id="edit-course-credit"></select>
+        </div>
+
+        <div class="field" id="edit-new-grade-group">
+          <label class="field__label" for="edit-course-grade">Expected grade</label>
+          <select class="select" id="edit-course-grade"></select>
+        </div>
+
+        <div class="field" id="edit-retake-prev-group" hidden>
+          <label class="field__label" for="edit-retake-prev">Previous grade</label>
+          <select class="select" id="edit-retake-prev"></select>
+        </div>
+
+        <div class="field" id="edit-retake-new-group" hidden>
+          <label class="field__label" for="edit-retake-new">New expected grade</label>
+          <select class="select" id="edit-retake-new"></select>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:var(--space-2); margin-top:var(--space-2)">
+          <button type="button" class="btn btn--secondary" data-edit-close>Cancel</button>
+          <button type="submit" class="btn btn--primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <template id="help-content">
+    <h3>1. Set your status</h3>
+    <p>Enter your completed credit hours and current CGPA. First trimester? Put 0 for both.</p>
+    <h3>2. Add courses</h3>
+    <p><strong>New Courses</strong> are fresh enrollments — pick credit hours and the grade you expect. <strong>Retake Courses</strong> also ask for your previous grade, because a retake replaces the old grade point instead of adding new credits.</p>
+    <h3>3. Calculate</h3>
+    <p>Press <strong>Calculate CGPA</strong> to see your updated CGPA, the change from your current one, the GPA of the courses you entered, and your total credits after the update. Use <strong>Reset</strong> to start over. Your inputs stay saved on this device.</p>
+  </template>
+</body>
+</html>
