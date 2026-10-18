@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exam Conflict Tracker — UIU Calculator</title>
+  <meta name="description" content="Check UIU exam clashes before advising: pick your extra or retake courses and spot critical same-slot conflicts and heavy exam days on a day-by-slot grid.">
+  <meta property="og:title" content="Exam Conflict Tracker — UIU Calculator">
+  <meta property="og:description" content="Catch exam clashes and heavy exam days before you finalize advising.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uiu-calculator.vercel.app/tools/exam-conflict-tracker/">
+  <meta property="og:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Exam Conflict Tracker — UIU Calculator">
+  <meta name="twitter:description" content="Catch exam clashes and heavy exam days before you finalize advising.">
+  <meta name="twitter:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/tools.css">
+  <script>
+    // Theme boot — applies the stored (or system) theme before first paint.
+    (function () {
+      var theme = null;
+      try {
+        var raw = localStorage.getItem('uiucalc:theme');
+        theme = raw ? JSON.parse(raw) : null;
+      } catch (e) { /* storage unavailable */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <script type="module" src="/assets/js/pages/exam-conflict-tracker.js"></script>
+</head>
+<body data-shell="app">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="header-root"></div>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="page-head">
+          <p class="page-head__eyebrow">Tool / 04</p>
+          <h1 class="page-head__title">Exam Conflict Tracker</h1>
+          <p class="page-head__lede">Taking extra or retake courses? Simulate your trimester load and catch exam clashes before you finalize advising.</p>
+        </div>
+
+        <div class="tool-grid tool-grid--wide">
+          <!-- ============ Filters & picker ============ -->
+          <div class="section-stack">
+            <section class="panel" aria-labelledby="picker-title">
+              <div class="panel__head">
+                <h2 class="panel__title" id="picker-title">Courses you plan to take</h2>
+                <span class="panel__meta num" id="selected-count">0 selected</span>
+              </div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label class="field__label" for="school-select">School</label>
+                  <select class="select" id="school-select"></select>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="program-select">Program</label>
+                  <select class="select" id="program-select"></select>
+                </div>
+              </div>
+
+              <div class="picker" style="margin-top:var(--space-4)">
+                <div class="picker__search">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#search"/></svg>
+                  <label class="visually-hidden" for="course-search">Search courses</label>
+                  <input class="input" id="course-search" type="search" placeholder="Search courses — code or title" autocomplete="off">
+                </div>
+                <fieldset class="picker__list scroll-area" style="border:none;margin:0;padding:0">
+                  <legend class="visually-hidden">Courses and sections</legend>
+                  <div id="course-list"></div>
+                </fieldset>
+              </div>
+
+              <div class="panel__head" style="margin:var(--space-4) 0 var(--space-2);margin-bottom:var(--space-2)">
+                <h3 class="panel__title">Selected</h3>
+              </div>
+              <div class="selected-chips" id="selected-chips"></div>
+
+              <div class="actions">
+                <button class="btn btn--secondary" id="tracker-reset" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#reset"/></svg>
+                  Reset
+                </button>
+              </div>
+            </section>
+
+            <section class="panel" aria-labelledby="legend-title">
+              <div class="panel__head"><h2 class="panel__title" id="legend-title">Reading the alerts</h2></div>
+              <div class="section-stack" style="gap:var(--space-3)">
+                <div class="alert-card alert-card--critical">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#alert-octagon"/></svg>
+                  <div>
+                    <p class="alert-card__title">Critical conflict</p>
+                    <p class="alert-card__body">Two exams clash at the exact same day and slot — you cannot take these courses together.</p>
+                  </div>
+                </div>
+                <div class="alert-card alert-card--warn">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#alert-triangle"/></svg>
+                  <div>
+                    <p class="alert-card__title">Pressure warning</p>
+                    <p class="alert-card__body">Multiple exams on the same day in different slots — allowed, but stressful.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ============ Schedule ============ -->
+          <div class="section-stack">
+            <section class="panel" aria-labelledby="conflicts-title" aria-live="polite">
+              <div class="panel__head"><h2 class="panel__title" id="conflicts-title">Alerts</h2></div>
+              <div class="section-stack" id="conflict-cards" style="gap:var(--space-3)"></div>
+            </section>
+
+            <section class="panel" aria-labelledby="grid-title">
+              <div class="panel__head">
+                <h2 class="panel__title" id="grid-title">Exam schedule</h2>
+                <span class="panel__meta" id="schedule-meta"></span>
+              </div>
+
+              <div id="tracker-loading" class="state-block" hidden>
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#clock"/></svg>
+                <p>Loading the exam schedule…</p>
+              </div>
+
+              <div id="tracker-error" class="state-block" hidden>
+                <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#alert-octagon"/></svg>
+                <p><strong>Couldn't load the exam schedule.</strong><br>The data file is missing or unreachable — check your connection and try again.</p>
+                <button class="btn btn--secondary btn--sm" id="tracker-retry" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#reset"/></svg>
+                  Retry
+                </button>
+              </div>
+
+              <div id="tracker-content" hidden>
+                <div class="legend" style="margin-bottom:var(--space-3)">
+                  <span class="legend__item"><span class="legend__dot legend__dot--critical" aria-hidden="true"></span> Critical — same day, same slot</span>
+                  <span class="legend__item"><span class="legend__dot legend__dot--warn" aria-hidden="true"></span> Pressure — multiple exams this day</span>
+                  <span class="legend__item"><span class="legend__dot legend__dot--plain" aria-hidden="true"></span> Scheduled exam</span>
+                </div>
+                <div class="table-scroll scroll-area" id="schedule-scroll"></div>
+
+                <div class="panel" id="no-central-exam-section" style="margin-top:var(--space-5); background:var(--surface); border:1px solid var(--border)" hidden>
+                  <div class="panel__head" style="margin-bottom:var(--space-2)">
+                    <h3 class="panel__title" style="font-size:var(--text-base); display:flex; align-items:center; gap:var(--space-2)">
+                      <svg class="icon" aria-hidden="true" style="color:var(--muted)"><use href="/assets/icons/sprite.svg#info"/></svg>
+                      Courses with No Central Examination
+                    </h3>
+                    <span class="panel__meta" id="no-central-count"></span>
+                  </div>
+                  <p class="field__hint" style="margin-bottom:var(--space-3)">These courses do not appear in the central exam routine — assessments and lab tests are conducted internally by respective course teachers during class hours.</p>
+                  <div class="table-wrap" style="max-height:280px; overflow-y:auto">
+                    <table class="table" style="font-size:var(--text-xs)">
+                      <thead>
+                        <tr>
+                          <th>Course Code</th>
+                          <th>Course Title</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody id="no-central-exam-tbody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <div id="footer-root"></div>
+    </div>
+  </div>
+
+  <template id="help-content">
+    <h3>What is this tool?</h3>
+    <p>It's built for students stacking extra courses or retakes: simulate next trimester's exam load before you finalize advising.</p>
+    <h3>How to use it</h3>
+    <ol>
+      <li>Filter by school and program, then search for the courses you plan to take.</li>
+      <li>Tick every course-section pair. Selected exams land on the day-by-slot grid.</li>
+      <li>Watch the alerts: a red <strong>critical conflict</strong> means two exams share the exact same slot; an amber <strong>pressure warning</strong> means a heavy exam day.</li>
+    </ol>
+    <h3>Schedule data</h3>
+    <p>The grid reads <code>/data/exam-schedule.json</code> — update that file each trimester (format is documented in the README) and the tracker follows.</p>
+  </template>
+</body>
+</html>
