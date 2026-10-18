@@ -65,7 +65,7 @@ Other highlights:
 
 ### Live website
 
-> **Live Demo:** [Paste your Vercel app link here](https://your-vercel-app-link-here)
+> **Live Demo:** [Paste your Vercel app link here](https://uiucalc-shahriar.vercel.app/)
 
 ### Run locally with VS Code
 
