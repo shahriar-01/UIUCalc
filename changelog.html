@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Changelog — UIU Calculator</title>
+  <meta name="description" content="What's new in the UIU Calculator toolkit — releases, fixes and data updates.">
+  <meta property="og:title" content="Changelog — UIU Calculator">
+  <meta property="og:description" content="What's new in the UIU Calculator toolkit.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uiu-calculator.vercel.app/changelog/">
+  <meta property="og:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Changelog — UIU Calculator">
+  <meta name="twitter:description" content="What's new in the UIU Calculator toolkit.">
+  <meta name="twitter:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/tools.css">
+  <script>
+    // Theme boot — applies the stored (or system) theme before first paint.
+    (function () {
+      var theme = null;
+      try {
+        var raw = localStorage.getItem('uiucalc:theme');
+        theme = raw ? JSON.parse(raw) : null;
+      } catch (e) { /* storage unavailable */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <script type="module" src="/assets/js/main.js"></script>
+</head>
+<body data-shell="app">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="header-root"></div>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="page-head">
+          <p class="page-head__eyebrow">Release notes</p>
+          <h1 class="page-head__title">Changelog</h1>
+          <p class="page-head__lede">What's new in the toolkit.</p>
+        </div>
+
+        <div class="section-stack" style="max-width:760px">
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title">v1.1.0 <span class="chip" style="margin-left:var(--space-2)">latest</span></h2>
+              <span class="panel__meta num">2026-10-16</span>
+            </div>
+            <ul class="steps" style="gap:var(--space-3)">
+              <li><strong>Changed</strong> — New UC logo with separate light and dark variants that follow the active theme.</li>
+              <li><strong>Changed</strong> — Fully fluid layout: tool pages, forms and tables now adapt to the space available (including the sidebar state) instead of fixed breakpoints.</li>
+              <li><strong>Fixed</strong> — Sidebar label and state now stay in sync after a resize; the hidden mobile drawer is no longer reachable by keyboard.</li>
+              <li><strong>Fixed</strong> — Planner gauge turns red when a target is unreachable.</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title">v1.0.0</h2>
+              <span class="panel__meta num">2026-10-15</span>
+            </div>
+            <ul class="steps" style="gap:var(--space-3)">
+              <li><strong>Added</strong> — CGPA Calculator with new-course and retake handling, live results and the UIU grade scale (exportable as image/CSV).</li>
+              <li><strong>Added</strong> — Tuition Fee Calculator: per-credit tuition, trimester fee, waiver/scholarship rules, stackable special waivers, FYDP &amp; retake policies and the 40-30-30 installment plan with a copyable summary.</li>
+              <li><strong>Added</strong> — Target CGPA Planner with next-trimester, multi-trimester, until-graduation and what-if scenarios, gauge and grade-mix suggestions.</li>
+              <li><strong>Added</strong> — Exam Conflict Tracker fed by an editable <code>/data/exam-schedule.json</code>: critical same-slot clashes and same-day pressure warnings on a day-by-slot grid.</li>
+              <li><strong>Added</strong> — Light/dark themes, collapsible sidebar with remembered state, per-tool "How to use" dialogs, personalized greeting and saved inputs.</li>
+              <li><strong>Added</strong> — Unit tests for every calculation engine (<code>npm test</code>).</li>
+            </ul>
+          </article>
+
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title">Data</h2>
+              <span class="panel__meta">ongoing</span>
+            </div>
+            <p style="font-size:var(--text-sm);color:var(--muted)">
+              Exam schedules are refreshed every trimester. Edit <code>data/exam-schedule.json</code> (course, title, section, day, slot,
+              school, program), commit and push — Vercel redeploys automatically. Fee defaults and the grade scale live in
+              <code>assets/js/config/fees.js</code> and <code>assets/js/config/grading.js</code>.
+            </p>
+          </article>
+        </div>
+      </main>
+
+      <div id="footer-root"></div>
+    </div>
+  </div>
+</body>
+</html>

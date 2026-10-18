@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UIUCalc — for UIU students</title>
+  <meta name="description" content="A fast, focused study toolkit for United International University students: CGPA calculator, tuition fee estimator, target CGPA planner and exam conflict tracker.">
+  <meta property="og:title" content="UIUCalc— study toolkit for UIU students">
+  <meta property="og:description" content="CGPA, tuition fees, target planning and exam conflict tracking in one fast toolkit.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://uiu-calculator.vercel.app/">
+  <meta property="og:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="UIU Calculator — study toolkit for UIU students">
+  <meta name="twitter:description" content="CGPA, tuition fees, target planning and exam conflict tracking in one fast toolkit.">
+  <meta name="twitter:image" content="https://uiu-calculator.vercel.app/assets/images/og-image.png">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/landing.css">
+  <script>
+    // Theme boot — applies the stored (or system) theme before first paint.
+    (function () {
+      var theme = null;
+      try {
+        var raw = localStorage.getItem('uiucalc:theme');
+        theme = raw ? JSON.parse(raw) : null;
+      } catch (e) { /* storage unavailable */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <script type="module" src="/assets/js/pages/landing.js"></script>
+</head>
+<body data-shell="landing">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="landing" id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__inner">
+        <div class="hero__top" data-animate style="--i:0">
+          <a class="hero__brand" href="/">
+            <img class="logo logo--light" src="/assets/images/logo-light.png" alt="UIU Calculator logo" width="40" height="38"><img class="logo logo--dark" src="/assets/images/logo-dark.png" alt="UIU Calculator logo" width="40" height="38">
+          <span style="font-size: 24px; font-family: monospace;">UIU<span style="color: #ff4d00;">Calc</span></span>
+          </a>
+          <div class="hero__top-actions">
+            <button type="button" class="icon-btn" id="hero-theme-toggle" aria-label="Toggle theme"></button>
+            <button type="button" class="icon-btn" id="profile-toggle" aria-label="Your profile" aria-haspopup="dialog">
+              <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#user"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="hero__content">
+          <p class="hero__eyebrow" data-animate style="--i:1"><span style="font-weight: 500;">For UIU students</span></p>
+
+          <h1 class="hero__title" id="hero-title" data-animate style="--i:2">Every number your trimester needs<span style="color: #ff4d00;">.</span></h1>
+
+          <p class="hero__greeting" id="hero-greeting" data-animate style="--i:3" aria-live="polite" hidden></p>
+
+          <p class="hero__sub" data-animate style="--i:4">CGPA, tuition fees, targets and exam clashes — one fast, minimal toolkit.</p>
+
+          <nav class="hero__tools" data-animate style="--i:5" aria-label="Tools">
+            <a class="hero-tool" href="/calculator/cgpa/">
+              <span class="hero-tool__icon" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#calculator"/></svg></span>
+              <span class="hero-tool__body">
+                <span class="hero-tool__title">CGPA Calculator</span>
+                <span class="hero-tool__desc">New courses & retakes, blended into your updated CGPA.</span>
+              </span>
+              <span class="hero-tool__go" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#arrow-right"/></svg></span>
+            </a>
+            <a class="hero-tool" href="/calculator/tuition-fee/">
+              <span class="hero-tool__icon" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#receipt"/></svg></span>
+              <span class="hero-tool__body">
+                <span class="hero-tool__title">Tuition Fee Calculator</span>
+                <span class="hero-tool__desc">Gross fees, waivers and the three installments.</span>
+              </span>
+              <span class="hero-tool__go" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#arrow-right"/></svg></span>
+            </a>
+            <a class="hero-tool" href="/calculator/cgpa-planner/">
+              <span class="hero-tool__icon" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#target"/></svg></span>
+              <span class="hero-tool__body">
+                <span class="hero-tool__title">Target CGPA Planner</span>
+                <span class="hero-tool__desc">The GPA you need to reach your target.</span>
+              </span>
+              <span class="hero-tool__go" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#arrow-right"/></svg></span>
+            </a>
+            <a class="hero-tool" href="/tools/exam-conflict-tracker/">
+              <span class="hero-tool__icon" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#calendar-alert"/></svg></span>
+              <span class="hero-tool__body">
+                <span class="hero-tool__title">Exam Conflict Tracker</span>
+                <span class="hero-tool__desc">Catch exam clashes before advising.</span>
+              </span>
+              <span class="hero-tool__go" aria-hidden="true"><svg class="icon"><use href="/assets/icons/sprite.svg#arrow-right"/></svg></span>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <dialog class="dialog" id="profile-dialog" aria-labelledby="profile-dialog-title">
+    <div class="dialog__panel">
+      <header class="dialog__head">
+        <h2 class="dialog__title" id="profile-dialog-title">Your profile</h2>
+        <button type="button" class="icon-btn" data-profile-close aria-label="Close profile dialog">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#close"/></svg>
+        </button>
+      </header>
+      <form class="dialog__body" id="profile-form" novalidate>
+        <div class="field">
+          <label class="field__label" for="profile-name">Name</label>
+          <input class="input" id="profile-name" type="text" maxlength="40" autocomplete="given-name" placeholder="What's your name? (optional)">
+          <p class="field__hint">Stored on this device only — used to greet you.</p>
+        </div>
+        <div class="dialog__actions">
+          <button class="btn btn--primary" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div id="footer-root"></div>
+</body>
+</html>

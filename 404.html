@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — Page not found · UIU Calculator</title>
+  <meta name="description" content="That page doesn't exist. Head back to the UIU Calculator toolkit.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-light.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="/assets/images/favicon-dark.png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <script>
+    // Theme boot — applies the stored (or system) theme before first paint.
+    (function () {
+      var theme = null;
+      try {
+        var raw = localStorage.getItem('uiucalc:theme');
+        theme = raw ? JSON.parse(raw) : null;
+      } catch (e) { /* storage unavailable */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+</head>
+<body data-shell="minimal">
+  <main style="min-height:100dvh;display:grid;place-items:center;padding:var(--space-6)">
+    <div style="max-width:520px;text-align:center;display:grid;gap:var(--space-5);justify-items:center">
+      <img class="logo logo--light" src="/assets/images/logo-light.png" alt="" width="64" height="61"><img class="logo logo--dark" src="/assets/images/logo-dark.png" alt="" width="64" height="61">
+      <p class="num" aria-hidden="true" style="font-size:clamp(4rem,18vw,7rem);font-weight:600;line-height:1;color:var(--orange-500);letter-spacing:-0.04em">404</p>
+      <h1 style="font-size:var(--text-2xl)">Wrong turn in the schedule.</h1>
+      <p style="color:var(--muted);max-width:42ch">
+        This page doesn't exist — maybe the URL changed or the trimester rolled over.
+        The toolkit itself is right where you left it.
+      </p>
+      <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;justify-content:center">
+        <a class="btn btn--primary" href="/">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons/sprite.svg#home"/></svg>
+          Back home
+        </a>
+        <a class="btn btn--ghost" href="/changelog/">What's new</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
